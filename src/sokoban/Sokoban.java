@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import javax.swing.Box;
 
+import sokoban.entity.Player;
 import sokoban.gfx.GUI;
 
 public class Sokoban {
@@ -17,9 +18,11 @@ public class Sokoban {
   GUI gui;
   
   public Sokoban(String[] levelData, boolean gfx) {
-    player = new Player();
-    board = new Board(levelData);
-    boxes = new ArrayList<Box>();
+	board = new Board(levelData);
+	boxes = new ArrayList<Box>();
+	
+    player = new Player(board);
+    
     
     if (gfx) {
       gui = new GUI();
@@ -30,12 +33,16 @@ public class Sokoban {
     boolean inputValid = true;
     switch (input) {
     case 'w':
+    	player.move(-1, 0);
       break;
     case 'a':
+    	player.move(0, -1);
       break;
     case 's':
+    	player.move(0, 1);
       break;
     case 'd':
+    	player.move(1, 0);
       break;
 
     default:
