@@ -1,6 +1,5 @@
 package sokoban.world;
 
-import sokoban.entity.Crate;
 import sokoban.entity.Entity;
 
 public abstract class Tile {
@@ -53,18 +52,18 @@ public abstract class Tile {
 
     if (c == '#') {
       tile = new WallTile(x, y);
-    } else if (c == 'o') {
-      tile = new StorageTile(x, y);
-      Crate crate = new Crate();
-      crate.moveTo(tile);
     } else if (c == '.') {
       tile = new StorageTile(x, y);
-    } else if (c == '@') {
-      tile = new NormalTile(x, y);
     } else {
       tile = new NormalTile(x, y);
     }
     return tile;
+  }
+
+  public abstract char getChar();
+
+  public String toString() {
+    return isOccupied() ? occupant.toString() : "" + getChar();
   }
 
 }

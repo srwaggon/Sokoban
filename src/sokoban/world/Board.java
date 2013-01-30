@@ -6,8 +6,8 @@ public class Board {
   final int WIDTH;
   Tile[][] tiles;
 
-  public Board(String[] board) {
-    tiles = parseBoard(board);
+  public Board(Tile[][] board) {
+    tiles = board;
     WIDTH = tiles.length;
     HEIGHT = tiles[0].length;
   }
@@ -17,28 +17,6 @@ public class Board {
     this.HEIGHT = HEIGHT;
 
     tiles = new Tile[WIDTH][HEIGHT];
-  }
-
-  private static Tile[][] parseBoard(String[] board) {
-    Tile[][] tiles;
-
-    final int H = board.length;
-    assert H > 0;
-
-    final int W = board[0].length();
-    assert W > 0;
-
-    tiles = new Tile[W][H];
-
-    for (int y = 0; y < H; y++) {
-      for (int x = 0; x < W; x++) {
-        char c = board[y].charAt(x);
-        Tile newTile = Tile.parseTile(x, y, c);
-        tiles[x][y] = newTile;
-      }
-    }
-
-    return tiles;
   }
 
   public Tile getTile(int x, int y) {

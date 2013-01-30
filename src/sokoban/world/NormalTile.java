@@ -10,8 +10,8 @@ public class NormalTile extends Tile {
     return true;
   }
 
-  public String toString() {
-    return " ";
+  public char getChar() {
+    return ' ';
   }
 
 }

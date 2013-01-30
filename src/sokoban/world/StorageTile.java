@@ -8,11 +8,11 @@ public class StorageTile extends Tile {
 
   @Override
   public boolean isAccessible() {
-    return isOccupied();
+    return true;
   }
 
-  public String toString() {
-    return isOccupied() ? occupant.toString() : ".";
+  public char getChar() {
+    return '.';
   }
 
 }

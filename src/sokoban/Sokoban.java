@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.Box;
-
+import sokoban.entity.Crate;
 import sokoban.entity.Entity;
 import sokoban.entity.Player;
 import sokoban.gfx.GUI;
@@ -15,23 +14,14 @@ import sokoban.world.Tile;
 public class Sokoban {
 
   Board board;
-  List<Box> boxes;
+  List<Crate> crates;
   Player player;
   GUI gui;
 
   public Sokoban(String[] levelData, boolean gfx) {
-    board = new Board(levelData);
-    
+    crates = new ArrayList<Crate>();
     player = new Player();
-    for (int y = 0; y < levelData.length; y++) {
-      String line = levelData[y];
-      for (int x = 0; x < line.length(); x++) {
-        if (line.charAt(x) == '@') {
-          player.moveTo(board.getTile(x, y));
-        }
-      }
-    }
-    boxes = new ArrayList<Box>();
+    board = new Board(parseBoard(levelData));
 
     if (gfx) {
       gui = new GUI();
@@ -39,12 +29,16 @@ public class Sokoban {
   }
 
   public boolean handleInput(char input) {
+    // w = up
+    // a = left
+    // s = down
+    // d = right
     switch (input) {
     case 'w':
-      return tryMove(-1, 0, player);
+      return tryMove(0, -1, player);
 
     case 'a':
-      return tryMove(0, -1, player);
+      return tryMove(-1, 0, player);
 
     case 's':
       return tryMove(0, 1, player);
@@ -68,12 +62,10 @@ public class Sokoban {
 
     // If the tile is occupied, try to push its occupant.
     if (nextTile.isOccupied()) {
-      if (tryMove(dx, dy, nextTile.getOccupant())) {
-        return movingEntity.moveTo(nextTile);
-      }
+      tryMove(dx, dy, nextTile.getOccupant());
     }
 
-    return false;
+    return movingEntity.moveTo(nextTile);
   }
 
   public void start() {
@@ -90,13 +82,21 @@ public class Sokoban {
           handleInput(input.charAt(i));
         }
       }
+      System.out.println("Puzzle solved.");
     } else {
 
     }
   }
 
   public boolean isSolved() {
-    return false;
+
+    // Check that each crate is on a storage tile.
+    for (Crate c : crates) {
+      if (c.getTile().getChar() != '.') {
+        return false;
+      }
+    }
+    return true;
   }
 
   public String toString() {
@@ -104,8 +104,46 @@ public class Sokoban {
   }
 
   public static void main(String[] args) {
-    String[] level = { "#####", "#.o@#", "#####" };
+    String[] level = {
+        "#######",
+        "#.  o #",
+        "#.o  @#",
+        "#     #",
+        "#######"
+    };
 
     new Sokoban(level, false).start();
   }
+
+  private Tile[][] parseBoard(String[] board) {
+    Tile[][] tiles;
+
+    final int H = board.length;
+    assert H > 0;
+
+    final int W = board[0].length();
+    assert W > 0;
+
+    tiles = new Tile[W][H];
+
+    for (int y = 0; y < H; y++) {
+      for (int x = 0; x < W; x++) {
+        char c = board[y].charAt(x);
+        Tile newTile = Tile.parseTile(x, y, c);
+        tiles[x][y] = newTile;
+
+        if (c == '@') {
+          player.moveTo(newTile);
+        }
+
+        if (c == 'o') {
+          Crate crate = new Crate();
+          crate.moveTo(newTile);
+          crates.add(crate);
+        }
+      }
+    }
+    return tiles;
+  }
+
 }

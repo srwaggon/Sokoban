@@ -8,9 +8,20 @@ public abstract class Entity {
   public boolean moveTo(Tile nextTile) {
 
     // Neither wall nor occupied
-    if (!nextTile.isAccessible() && !nextTile.isOccupied()) {
-      nextTile.setOccupant(this);
-      return true;
+    if (nextTile.isAccessible() && !nextTile.isOccupied()) {
+
+      // if successfully able to occupy the tile
+      if (nextTile.setOccupant(this)) {
+
+        // leave old tile
+        if (tile != null) {
+          tile.vacate();
+        }
+
+        // move to new one
+        tile = nextTile;
+        return true;
+      }
     }
     return false;
   }

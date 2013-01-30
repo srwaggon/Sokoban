@@ -10,7 +10,7 @@ public class WallTile extends Tile {
     return false;
   }
 
-  public String toString() {
-    return "#";
+  public char getChar() {
+    return '#';
   }
 }
