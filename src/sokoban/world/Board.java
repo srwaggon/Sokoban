@@ -44,7 +44,7 @@ public class Board {
     String result = "";
     for (int y = 0; y < HEIGHT; y++) {
       for (int x = 0; x < WIDTH; x++) {
-        result += tiles[x][y].toString();
+        result += tiles[x][y].toString() + " ";
       }
       result += "\n";
     }

@@ -60,11 +60,18 @@ public class Sokoban {
     Tile lastTile = movingEntity.getTile();
     Tile nextTile = board.getTile(lastTile.X + dx, lastTile.Y + dy);
 
-    // If the tile is occupied, try to push its occupant.
     if (nextTile.isOccupied()) {
-      tryMove(dx, dy, nextTile.getOccupant());
-    }
 
+      // only Player can push a single crate
+      if (movingEntity.toString().equals("@")) {
+
+        // if crate push succeeds, move entity
+        if (tryMove(dx, dy, nextTile.getOccupant())) {
+          return movingEntity.moveTo(nextTile);
+        }
+      }
+      return false;
+    }
     return movingEntity.moveTo(nextTile);
   }
 
@@ -82,6 +89,7 @@ public class Sokoban {
           handleInput(input.charAt(i));
         }
       }
+      System.out.println(this);
       System.out.println("Puzzle solved.");
     } else {
 
@@ -89,7 +97,6 @@ public class Sokoban {
   }
 
   public boolean isSolved() {
-
     // Check that each crate is on a storage tile.
     for (Crate c : crates) {
       if (c.getTile().getChar() != '.') {
@@ -101,18 +108,6 @@ public class Sokoban {
 
   public String toString() {
     return this.board.toString();
-  }
-
-  public static void main(String[] args) {
-    String[] level = {
-        "#######",
-        "#.  o #",
-        "#.o  @#",
-        "#     #",
-        "#######"
-    };
-
-    new Sokoban(level, false).start();
   }
 
   private Tile[][] parseBoard(String[] board) {
@@ -144,6 +139,52 @@ public class Sokoban {
       }
     }
     return tiles;
+  }
+
+
+  public static void main(String[] args) {
+    List<String[]> levels = new ArrayList<String[]>();
+    levels.add(new String[]{
+        "    #####          ",
+        "    #   #          ",
+        "    #o  #          ",
+        "  ###  o##         ",
+        "  #  o o #         ",
+        "### # ## #   ######",
+        "#   # ## #####  ..#",
+        "# o  o          ..#",
+        "##### ### #@##  ..#",
+        "    #     #########",
+        "    #######        "
+    });
+
+    levels.add(new String[] {
+        "############  ",
+        "#..  #     ###",
+        "#..  # o  o  #",
+        "#..  #o####  #",
+        "#..    @ ##  #",
+        "#..  # #  o ##",
+        "###### ##o o #",
+        "  # o  o o o #",
+        "  #    #     #",
+        "  ############"
+    });
+
+    levels.add(new String[] {
+        "        ######## ",
+        "        #     @# ",
+        "        # o#o ## ",
+        "        # o  o#  ",
+        "        ##o o #  ",
+        "######### o # ###",
+        "#....  ## o  o  #",
+        "##...    o  o   #",
+        "#....  ##########",
+        "########         "
+        });
+
+    new Sokoban(levels.get(0), false).start();
   }
 
 }
