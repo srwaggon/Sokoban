@@ -15,13 +15,22 @@ import sokoban.world.Tile;
 public class Sokoban {
 
   Board board;
-  Player player;
   List<Box> boxes;
-
+  Player player;
   GUI gui;
 
   public Sokoban(String[] levelData, boolean gfx) {
     board = new Board(levelData);
+    
+    player = new Player();
+    for (int y = 0; y < levelData.length; y++) {
+      String line = levelData[y];
+      for (int x = 0; x < line.length(); x++) {
+        if (line.charAt(x) == '@') {
+          player.moveTo(board.getTile(x, y));
+        }
+      }
+    }
     boxes = new ArrayList<Box>();
 
     if (gfx) {

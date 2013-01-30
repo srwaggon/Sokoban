@@ -1,6 +1,5 @@
 package sokoban.world;
 
-import sokoban.entity.Player;
 
 public class Board {
   final int HEIGHT;
@@ -36,10 +35,6 @@ public class Board {
         char c = board[y].charAt(x);
         Tile newTile = Tile.parseTile(x, y, c);
         tiles[x][y] = newTile;
-        if (c == '@') {
-          Player player = new Player();
-          player.moveTo(newTile);
-        }
       }
     }
 
@@ -53,6 +48,14 @@ public class Board {
       tile = tiles[x][y];
     }
     return tile;
+  }
+
+  public int getWidth() {
+    return WIDTH;
+  }
+
+  public int getHeight() {
+    return HEIGHT;
   }
 
   public boolean isValidLoc(int x, int y) {
