@@ -6,8 +6,11 @@ import java.util.Scanner;
 
 import javax.swing.Box;
 
+import sokoban.entity.Entity;
 import sokoban.entity.Player;
 import sokoban.gfx.GUI;
+import sokoban.world.Board;
+import sokoban.world.Tile;
 
 public class Sokoban {
 
@@ -16,54 +19,69 @@ public class Sokoban {
   List<Box> boxes;
 
   GUI gui;
-  
+
   public Sokoban(String[] levelData, boolean gfx) {
-	board = new Board(levelData);
-	boxes = new ArrayList<Box>();
-	
-    player = new Player(board);
-    
-    
+    board = new Board(levelData);
+    boxes = new ArrayList<Box>();
+
     if (gfx) {
       gui = new GUI();
     }
   }
 
   public boolean handleInput(char input) {
-    boolean inputValid = true;
     switch (input) {
     case 'w':
-    	player.move(-1, 0);
-      break;
+      return tryMove(-1, 0, player);
+
     case 'a':
-    	player.move(0, -1);
-      break;
+      return tryMove(0, -1, player);
+
     case 's':
-    	player.move(0, 1);
-      break;
+      return tryMove(0, 1, player);
+
     case 'd':
-    	player.move(1, 0);
-      break;
+      return tryMove(1, 0, player);
 
     default:
       return false; // input was bad and was not processed.
     }
+  }
 
-    return true; // input was valid and was processed.
+  public boolean tryMove(int dx, int dy, Entity movingEntity) {
+    if (dx != 0 && dy != 0) {
+      System.out.println("Invalid Move attempted by " + movingEntity);
+      return false;
+    }
+
+    Tile lastTile = movingEntity.getTile();
+    Tile nextTile = board.getTile(lastTile.X + dx, lastTile.Y + dy);
+
+    // If the tile is occupied, try to push its occupant.
+    if (nextTile.isOccupied()) {
+      if (tryMove(dx, dy, nextTile.getOccupant())) {
+        return movingEntity.moveTo(nextTile);
+      }
+    }
+
+    return false;
   }
 
   public void start() {
     Scanner s = null;
     if (gui == null) {
       s = new Scanner(System.in);
-    }
 
-    while (!isSolved()) {
-      String input = s.next();
+      while (!isSolved()) {
+        System.out.println(this);
+        System.out.print("[WASD to Move]> ");
+        String input = s.next();
 
-      for (int i = 0; i < input.length(); i++) {
-        handleInput(input.charAt(i));
+        for (int i = 0; i < input.length(); i++) {
+          handleInput(input.charAt(i));
+        }
       }
+    } else {
 
     }
   }
@@ -72,14 +90,13 @@ public class Sokoban {
     return false;
   }
 
+  public String toString() {
+    return this.board.toString();
+  }
 
   public static void main(String[] args) {
-    String[] level = {
-        "#####",
-        "#.o@#",
-        "#####"
-    };
+    String[] level = { "#####", "#.o@#", "#####" };
 
-    new Sokoban(level, false);
+    new Sokoban(level, false).start();
   }
 }

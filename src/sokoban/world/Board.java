@@ -1,5 +1,6 @@
-package sokoban;
+package sokoban.world;
 
+import sokoban.entity.Player;
 
 public class Board {
   final int HEIGHT;
@@ -22,47 +23,27 @@ public class Board {
   private static Tile[][] parseBoard(String[] board) {
     Tile[][] tiles;
 
-    final int W = board.length;
-    assert W > 0;
-
-    final int H = board[0].length();
+    final int H = board.length;
     assert H > 0;
+
+    final int W = board[0].length();
+    assert W > 0;
 
     tiles = new Tile[W][H];
 
     for (int y = 0; y < H; y++) {
       for (int x = 0; x < W; x++) {
-        tiles[x][y] = parseTile(board[y].charAt(x));
+        char c = board[y].charAt(x);
+        Tile newTile = Tile.parseTile(x, y, c);
+        tiles[x][y] = newTile;
+        if (c == '@') {
+          Player player = new Player();
+          player.moveTo(newTile);
+        }
       }
-
     }
 
     return tiles;
-  }
-
-  /*
-   * Return a new Tile of appropriate type 
-   * '#' = wall tile 
-   * 'o' = tile with container 
-   * '.' = storage tile 
-   * ' ' = normal tile 
-   * '@' = character tile
-   */
-  private static Tile parseTile(char c) {
-    Tile tile = null;
-
-    if (c == '#') {
-      tile = new Tile(false, true);
-    } else if (c == 'o') {
-      tile = new Tile(false, false);
-    } else if (c == '.') {
-      tile = new Tile(true, false);
-    } else if (c == '@') {
-      tile = new Tile(false, false);
-    } else {
-      tile = new Tile(false, false);
-    }
-    return tile;
   }
 
   public Tile getTile(int x, int y) {

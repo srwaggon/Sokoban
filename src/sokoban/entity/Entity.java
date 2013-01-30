@@ -1,34 +1,21 @@
 package sokoban.entity;
 
-import sokoban.Board;
-import sokoban.Tile;
+import sokoban.world.Tile;
 
-public class Entity {
-	
-	int x;
-	int y;
-	
-	Board board;
-	Tile tile;
-	
-	public Entity(Board board) {
-		this.board = board;
-	}
+public abstract class Entity {
+  Tile tile;
 
-	
-	public boolean move(int dx, int dy) {
-		  
-		  int rx = x + dx; // resulting x
-		  int ry = y + dy; // resulting y
-		  
-		  if (board.isValidLoc(rx, ry)) {
-			  Tile nextTile = board.getTile(rx,  ry);
-			  
-			  // Neither wall nor occupied
-			  if (!nextTile.isWall && !nextTile.isOccupied()) { 
-				  return true;
-			  }
-		  }
-		  return false;
-	}
+  public boolean moveTo(Tile nextTile) {
+
+    // Neither wall nor occupied
+    if (!nextTile.isAccessible() && !nextTile.isOccupied()) {
+      nextTile.setOccupant(this);
+      return true;
+    }
+    return false;
+  }
+
+  public Tile getTile() {
+    return tile;
+  }
 }
