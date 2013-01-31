@@ -20,6 +20,6 @@ public class Crate extends Entity {
   }
 
   public String toString() {
-    return "o";
+    return tile.getChar() == '.' ? "*" : "o";
   }
 }

@@ -32,8 +32,8 @@ public class UnitTests {
     assert playerTile != null;
 
     // assert player is at proper location.
-    assert playerTile.X == 3;
-    assert playerTile.Y == 3;
+    assert playerTile.X == 2;
+    assert playerTile.Y == 2;
 
     // assert toString works.
     assert game.toString().equals(
@@ -100,7 +100,19 @@ public class UnitTests {
             "# # # # # # \n"
         );
 
+    // test right
+    game.handleInput('d');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#   @     # \n" +
+            "# . o     # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+
     // test walking on storage
+    game.handleInput('a');
     game.handleInput('s');
     assert game.toString().equals(
         "# # # # # # \n" +
@@ -118,7 +130,83 @@ public class UnitTests {
     // assert same tile
     assert player.getTile() == game.getBoard().getTile(1, 3);
 
+    // test moving container
+
+    game.handleInput('d');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#         # \n" +
+            "# . @ o   # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+
+    // test pushing container into wall -- should do nothing
+    game.handleInput('s');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#         # \n" +
+            "# . @ o   # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+
+    // put crate back.
+    game.handleInput('w');
+    game.handleInput('d');
+    game.handleInput('d');
+    game.handleInput('s');
     game.handleInput('a');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#         # \n" +
+            "# . o @   # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+
+    // can't push crate into other crate.
+    game.handleInput('w');
+    game.handleInput('a');
+    game.handleInput('s');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#   @     # \n" +
+            "# . o     # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+    
+    // test crate on storage tile
+    game.handleInput('d');
+    game.handleInput('s');
+    game.handleInput('a');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#         # \n" +
+            "# * @     # \n" +
+            "# . o     # \n" +
+            "# # # # # # \n"
+        );
+
+    // test solved
+    game.handleInput('d');
+    game.handleInput('s');
+    game.handleInput('a');
+    assert game.toString().equals(
+        "# # # # # # \n" +
+            "#         # \n" +
+            "#         # \n" +
+            "# *       # \n" +
+            "# * @     # \n" +
+            "# # # # # # \n"
+        );
+
     assert game.isSolved() == true;
 
     System.out.println("Passed.");
