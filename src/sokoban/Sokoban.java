@@ -13,10 +13,16 @@ import sokoban.world.Tile;
 
 public class Sokoban {
 
+  public static List<String[]> levels = new ArrayList<String[]>();
+
   Board board;
   List<Crate> crates;
   Player player;
   GUI gui;
+
+  public Sokoban(int levelNum, boolean gfx) {
+    this(levels.get(levelNum), gfx);
+  }
 
   public Sokoban(String[] levelData, boolean gfx) {
     crates = new ArrayList<Crate>();
@@ -24,8 +30,16 @@ public class Sokoban {
     board = new Board(parseBoard(levelData));
 
     if (gfx) {
-      gui = new GUI();
+      gui = new GUI(this);
     }
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  public Player getPlayer() {
+    return player;
   }
 
   public boolean handleInput(char input) {
@@ -76,9 +90,8 @@ public class Sokoban {
   }
 
   public void start() {
-    Scanner s = null;
     if (gui == null) {
-      s = new Scanner(System.in);
+      Scanner s = new Scanner(System.in);
 
       while (!isSolved()) {
         System.out.println(this);
@@ -91,8 +104,6 @@ public class Sokoban {
       }
       System.out.println(this);
       System.out.println("Puzzle solved.");
-    } else {
-
     }
   }
 
@@ -143,7 +154,20 @@ public class Sokoban {
 
 
   public static void main(String[] args) {
-    List<String[]> levels = new ArrayList<String[]>();
+    levels.add(new String[] {
+        "#####",
+        "#.o@#",
+        "#####",
+    });
+
+    levels.add(new String[] {
+        "#######",
+        "#@    #",
+        "#.  o #",
+        "#.  o #",
+        "#######",
+    });
+
     levels.add(new String[]{
         "    #####          ",
         "    #   #          ",
@@ -184,7 +208,7 @@ public class Sokoban {
         "########         "
         });
 
-    new Sokoban(levels.get(0), false).start();
+    new Sokoban(2, true).start();
   }
 
 }

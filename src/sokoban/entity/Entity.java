@@ -1,5 +1,7 @@
 package sokoban.entity;
 
+import java.awt.Graphics;
+
 import sokoban.world.Tile;
 
 public abstract class Entity {
@@ -25,6 +27,8 @@ public abstract class Entity {
     }
     return false;
   }
+  
+  public abstract void paint(Graphics g, int x, int y, int tileSize);
 
   public Tile getTile() {
     return tile;

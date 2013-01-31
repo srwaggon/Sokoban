@@ -1,5 +1,8 @@
 package sokoban.world;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 import sokoban.entity.Entity;
 
 public abstract class Tile {
@@ -13,6 +16,10 @@ public abstract class Tile {
   }
 
   public abstract boolean isAccessible();
+
+  public abstract Color getColor();
+
+  public abstract char getChar();
 
   public Entity getOccupant() {
     return this.occupant;
@@ -60,7 +67,19 @@ public abstract class Tile {
     return tile;
   }
 
-  public abstract char getChar();
+
+  public void paint(Graphics g, int xOffset, int yOffset, int size) {
+    g.setColor(getColor());
+    g.fillRect(xOffset + X * size, yOffset + Y * size, size, size);
+
+    // border
+    g.setColor(Color.BLACK);
+    g.drawRect(xOffset + X * size, yOffset + Y * size, size, size);
+
+    if (occupant != null) {
+      occupant.paint(g, xOffset + X * size, yOffset + Y * size, size);
+    }
+  }
 
   public String toString() {
     return isOccupied() ? occupant.toString() : "" + getChar();

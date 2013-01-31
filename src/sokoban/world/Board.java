@@ -1,5 +1,7 @@
 package sokoban.world;
 
+import java.awt.Graphics;
+
 
 public class Board {
   final int HEIGHT;
@@ -38,6 +40,14 @@ public class Board {
 
   public boolean isValidLoc(int x, int y) {
     return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length;
+  }
+
+  public void paint(Graphics g, int xOffset, int yOffset, int tileSize) {
+    for (int y = 0; y < HEIGHT; y++) {
+      for (int x = 0; x < WIDTH; x++) {
+        tiles[x][y].paint(g, xOffset, yOffset, tileSize);
+      }
+    }
   }
 
   public String toString() {
